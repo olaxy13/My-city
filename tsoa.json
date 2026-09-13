@@ -1,0 +1,26 @@
+{
+  "entryFile": "src/app.ts",
+  "noImplicitAdditionalProperties": "throw-on-extras",
+  "controllerPathGlobs": ["src/controllers/**/*.controller.ts"],
+  "routes": {
+    "routesDir": "src/routes",
+    "middleware": "express",
+    "authenticationModule": "src/middlewares/auth.middleware.ts"
+  },
+  "spec": {
+    "outputDirectory": "src/docs",
+    "specVersion": 3,
+    "info": {
+      "title": "City Discovery Platform API",
+      "version": "1.0.0",
+      "description": "REST API for City Discovery Platform - Events, Hangouts, Restaurants, Facilities & Moderation"
+    },
+    "securityDefinitions": {
+      "jwt": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

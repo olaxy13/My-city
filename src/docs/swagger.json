@@ -1,0 +1,2405 @@
+{
+	"openapi": "3.0.0",
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"ListingType": {
+				"type": "string",
+				"enum": [
+					"event",
+					"restaurant",
+					"facility"
+				]
+			},
+			"SubmissionResponseData": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"listingType": {
+						"$ref": "#/components/schemas/ListingType"
+					},
+					"status": {
+						"type": "string"
+					},
+					"editToken": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"title",
+					"listingType",
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_SubmissionResponseData_": {
+				"properties": {
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/SubmissionResponseData"
+					}
+				},
+				"required": [
+					"success",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiErrorDetail": {
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					},
+					"details": {}
+				},
+				"required": [
+					"code",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiErrorResponse": {
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"enum": [
+							false
+						],
+						"nullable": false
+					},
+					"error": {
+						"$ref": "#/components/schemas/ApiErrorDetail"
+					}
+				},
+				"required": [
+					"success",
+					"error"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CategoryEnum": {
+				"type": "string",
+				"enum": [
+					"music",
+					"food_drink",
+					"sports",
+					"comedy",
+					"arts_culture",
+					"nightlife",
+					"religious",
+					"education",
+					"lifestyle",
+					"wellness"
+				]
+			},
+			"EventDetailsDto": {
+				"properties": {
+					"startDateTime": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "string",
+								"format": "date-time"
+							}
+						]
+					},
+					"endDateTime": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "string",
+								"format": "date-time"
+							}
+						],
+						"nullable": true
+					},
+					"isRecurring": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"startDateTime"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"RestaurantDetailsDto": {
+				"properties": {
+					"cuisineType": {
+						"type": "string"
+					},
+					"priceRange": {
+						"type": "string",
+						"nullable": true
+					},
+					"operatingHours": {
+						"type": "string",
+						"nullable": true
+					},
+					"menuLink": {
+						"type": "string",
+						"nullable": true
+					},
+					"cacNumber": {
+						"type": "string",
+						"nullable": true
+					},
+					"licenseNumber": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"cuisineType"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"FacilityDetailsDto": {
+				"properties": {
+					"facilityCategory": {
+						"type": "string"
+					},
+					"emergencyContact": {
+						"type": "string",
+						"nullable": true
+					},
+					"operatingHours": {
+						"type": "string",
+						"nullable": true
+					},
+					"cacNumber": {
+						"type": "string",
+						"nullable": true
+					},
+					"licenseNumber": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"facilityCategory"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateSubmissionDto": {
+				"properties": {
+					"listingType": {
+						"$ref": "#/components/schemas/ListingType"
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"category": {
+						"$ref": "#/components/schemas/CategoryEnum"
+					},
+					"city": {
+						"type": "string"
+					},
+					"neighborhood": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"latitude": {
+						"type": "number",
+						"format": "double"
+					},
+					"longitude": {
+						"type": "number",
+						"format": "double"
+					},
+					"thumbnailUrl": {
+						"type": "string"
+					},
+					"galleryImageUrls": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"legalDocumentUrls": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"contactPhone": {
+						"type": "string"
+					},
+					"contactEmail": {
+						"type": "string"
+					},
+					"externalLink": {
+						"type": "string"
+					},
+					"submitterName": {
+						"type": "string"
+					},
+					"submitterEmail": {
+						"type": "string"
+					},
+					"submitterPhone": {
+						"type": "string"
+					},
+					"eventDetails": {
+						"$ref": "#/components/schemas/EventDetailsDto"
+					},
+					"restaurantDetails": {
+						"$ref": "#/components/schemas/RestaurantDetailsDto"
+					},
+					"facilityDetails": {
+						"$ref": "#/components/schemas/FacilityDetailsDto"
+					}
+				},
+				"required": [
+					"listingType",
+					"title",
+					"description",
+					"category",
+					"neighborhood",
+					"thumbnailUrl",
+					"submitterName",
+					"submitterEmail",
+					"submitterPhone"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ListingImageResponse": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"imageUrl": {
+						"type": "string"
+					},
+					"sortOrder": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"id",
+					"imageUrl",
+					"sortOrder"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ListingStatus": {
+				"type": "string",
+				"enum": [
+					"pending",
+					"needs_changes",
+					"approved",
+					"rejected"
+				]
+			},
+			"ListingDetailResponse": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"listingType": {
+						"$ref": "#/components/schemas/ListingType"
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"category": {
+						"$ref": "#/components/schemas/CategoryEnum"
+					},
+					"categoryLabel": {
+						"type": "string"
+					},
+					"city": {
+						"type": "string"
+					},
+					"neighborhood": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string",
+						"nullable": true
+					},
+					"latitude": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"longitude": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"thumbnailUrl": {
+						"type": "string"
+					},
+					"images": {
+						"items": {
+							"$ref": "#/components/schemas/ListingImageResponse"
+						},
+						"type": "array"
+					},
+					"legalDocumentUrls": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"contactPhone": {
+						"type": "string",
+						"nullable": true
+					},
+					"contactEmail": {
+						"type": "string",
+						"nullable": true
+					},
+					"externalLink": {
+						"type": "string",
+						"nullable": true
+					},
+					"status": {
+						"$ref": "#/components/schemas/ListingStatus"
+					},
+					"isFeatured": {
+						"type": "boolean"
+					},
+					"featuredOrder": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"isPublished": {
+						"type": "boolean"
+					},
+					"eventDetails": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/EventDetailsDto"
+							}
+						],
+						"nullable": true
+					},
+					"restaurantDetails": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/RestaurantDetailsDto"
+							}
+						],
+						"nullable": true
+					},
+					"facilityDetails": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/FacilityDetailsDto"
+							}
+						],
+						"nullable": true
+					},
+					"createdAt": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "string",
+								"format": "date-time"
+							}
+						]
+					},
+					"updatedAt": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "string",
+								"format": "date-time"
+							}
+						]
+					}
+				},
+				"required": [
+					"id",
+					"listingType",
+					"title",
+					"description",
+					"category",
+					"categoryLabel",
+					"city",
+					"neighborhood",
+					"thumbnailUrl",
+					"images",
+					"status",
+					"isFeatured",
+					"isPublished",
+					"createdAt",
+					"updatedAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_ListingDetailResponse_": {
+				"properties": {
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/ListingDetailResponse"
+					}
+				},
+				"required": [
+					"success",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ResubmitListingDto": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"category": {
+						"$ref": "#/components/schemas/CategoryEnum"
+					},
+					"city": {
+						"type": "string"
+					},
+					"neighborhood": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"latitude": {
+						"type": "number",
+						"format": "double"
+					},
+					"longitude": {
+						"type": "number",
+						"format": "double"
+					},
+					"thumbnailUrl": {
+						"type": "string"
+					},
+					"galleryImageUrls": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"legalDocumentUrls": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"contactPhone": {
+						"type": "string"
+					},
+					"contactEmail": {
+						"type": "string"
+					},
+					"externalLink": {
+						"type": "string"
+					},
+					"submitterName": {
+						"type": "string"
+					},
+					"submitterPhone": {
+						"type": "string"
+					},
+					"eventDetails": {
+						"$ref": "#/components/schemas/EventDetailsDto"
+					},
+					"restaurantDetails": {
+						"$ref": "#/components/schemas/RestaurantDetailsDto"
+					},
+					"facilityDetails": {
+						"$ref": "#/components/schemas/FacilityDetailsDto"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UploadSignatureResponse": {
+				"properties": {
+					"signature": {
+						"type": "string"
+					},
+					"timestamp": {
+						"type": "number",
+						"format": "double"
+					},
+					"apiKey": {
+						"type": "string"
+					},
+					"cloudName": {
+						"type": "string"
+					},
+					"folder": {
+						"type": "string"
+					},
+					"uploadUrl": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"signature",
+					"timestamp",
+					"apiKey",
+					"cloudName",
+					"folder",
+					"uploadUrl"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_UploadSignatureResponse_": {
+				"properties": {
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/UploadSignatureResponse"
+					}
+				},
+				"required": [
+					"success",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MediaUploadType": {
+				"type": "string",
+				"enum": [
+					"thumbnail",
+					"gallery",
+					"legal_doc"
+				]
+			},
+			"PaginationMeta": {
+				"properties": {
+					"page": {
+						"type": "number",
+						"format": "double"
+					},
+					"limit": {
+						"type": "number",
+						"format": "double"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"totalPages": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"page",
+					"limit",
+					"total",
+					"totalPages"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PaginatedApiResponse_ListingDetailResponse_": {
+				"properties": {
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"items": {
+							"$ref": "#/components/schemas/ListingDetailResponse"
+						},
+						"type": "array"
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					}
+				},
+				"required": [
+					"success",
+					"message",
+					"data",
+					"pagination"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CountdownSliderItem": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"listingType": {
+						"type": "string",
+						"enum": [
+							"event"
+						],
+						"nullable": false
+					},
+					"title": {
+						"type": "string"
+					},
+					"thumbnailUrl": {
+						"type": "string"
+					},
+					"city": {
+						"type": "string"
+					},
+					"neighborhood": {
+						"type": "string"
+					},
+					"category": {
+						"$ref": "#/components/schemas/CategoryEnum"
+					},
+					"categoryLabel": {
+						"type": "string"
+					},
+					"isFeatured": {
+						"type": "boolean"
+					},
+					"featuredOrder": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"startDateTime": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "string",
+								"format": "date-time"
+							}
+						]
+					},
+					"endDateTime": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "string",
+								"format": "date-time"
+							}
+						],
+						"nullable": true
+					}
+				},
+				"required": [
+					"id",
+					"listingType",
+					"title",
+					"thumbnailUrl",
+					"city",
+					"neighborhood",
+					"category",
+					"categoryLabel",
+					"isFeatured",
+					"startDateTime"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_CountdownSliderItem-Array_": {
+				"properties": {
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"items": {
+							"$ref": "#/components/schemas/CountdownSliderItem"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"success",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CityResponse": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"state": {
+						"type": "string"
+					},
+					"isActive": {
+						"type": "boolean"
+					},
+					"listingCount": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"state",
+					"isActive"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_CityResponse-Array_": {
+				"properties": {
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"items": {
+							"$ref": "#/components/schemas/CityResponse"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"success",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CategoryResponse": {
+				"properties": {
+					"slug": {
+						"$ref": "#/components/schemas/CategoryEnum"
+					},
+					"name": {
+						"type": "string"
+					},
+					"displayOrder": {
+						"type": "number",
+						"format": "double"
+					},
+					"listingCount": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"slug",
+					"name",
+					"displayOrder"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_CategoryResponse-Array_": {
+				"properties": {
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"items": {
+							"$ref": "#/components/schemas/CategoryResponse"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"success",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ModerationActionResponse": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"status": {
+						"$ref": "#/components/schemas/ListingStatus"
+					},
+					"isPublished": {
+						"type": "boolean"
+					},
+					"rejectionReason": {
+						"type": "string",
+						"nullable": true
+					},
+					"adminNotes": {
+						"type": "string",
+						"nullable": true
+					},
+					"updatedAt": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "string",
+								"format": "date-time"
+							}
+						]
+					}
+				},
+				"required": [
+					"id",
+					"title",
+					"status",
+					"isPublished",
+					"updatedAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_ModerationActionResponse_": {
+				"properties": {
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/ModerationActionResponse"
+					}
+				},
+				"required": [
+					"success",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"RejectListingDto": {
+				"properties": {
+					"rejectionReason": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"rejectionReason"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"RequestChangesDto": {
+				"properties": {
+					"adminNotes": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"adminNotes"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"LoginResponse": {
+				"properties": {
+					"token": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"token"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_LoginResponse_": {
+				"properties": {
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/LoginResponse"
+					}
+				},
+				"required": [
+					"success",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"LoginDto": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"email",
+					"password"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminRole": {
+				"type": "string",
+				"enum": [
+					"admin",
+					"super_admin"
+				]
+			},
+			"AdminUserResponse": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"role": {
+						"$ref": "#/components/schemas/AdminRole"
+					},
+					"isActive": {
+						"type": "boolean"
+					},
+					"createdAt": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "string",
+								"format": "date-time"
+							}
+						]
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"email",
+					"role",
+					"isActive",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_AdminUserResponse_": {
+				"properties": {
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/AdminUserResponse"
+					}
+				},
+				"required": [
+					"success",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminListingDetailResponse": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"listingType": {
+						"$ref": "#/components/schemas/ListingType"
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"category": {
+						"$ref": "#/components/schemas/CategoryEnum"
+					},
+					"categoryLabel": {
+						"type": "string"
+					},
+					"city": {
+						"type": "string"
+					},
+					"neighborhood": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string",
+						"nullable": true
+					},
+					"latitude": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"longitude": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"thumbnailUrl": {
+						"type": "string"
+					},
+					"images": {
+						"items": {
+							"$ref": "#/components/schemas/ListingImageResponse"
+						},
+						"type": "array"
+					},
+					"legalDocumentUrls": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"contactPhone": {
+						"type": "string",
+						"nullable": true
+					},
+					"contactEmail": {
+						"type": "string",
+						"nullable": true
+					},
+					"externalLink": {
+						"type": "string",
+						"nullable": true
+					},
+					"submitterName": {
+						"type": "string"
+					},
+					"submitterEmail": {
+						"type": "string"
+					},
+					"submitterPhone": {
+						"type": "string"
+					},
+					"editToken": {
+						"type": "string",
+						"nullable": true
+					},
+					"status": {
+						"$ref": "#/components/schemas/ListingStatus"
+					},
+					"rejectionReason": {
+						"type": "string",
+						"nullable": true
+					},
+					"adminNotes": {
+						"type": "string",
+						"nullable": true
+					},
+					"isFeatured": {
+						"type": "boolean"
+					},
+					"featuredOrder": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"isPublished": {
+						"type": "boolean"
+					},
+					"eventDetails": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/EventDetailsDto"
+							}
+						],
+						"nullable": true
+					},
+					"restaurantDetails": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/RestaurantDetailsDto"
+							}
+						],
+						"nullable": true
+					},
+					"facilityDetails": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/FacilityDetailsDto"
+							}
+						],
+						"nullable": true
+					},
+					"createdAt": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "string",
+								"format": "date-time"
+							}
+						]
+					},
+					"updatedAt": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "string",
+								"format": "date-time"
+							}
+						]
+					}
+				},
+				"required": [
+					"id",
+					"listingType",
+					"title",
+					"description",
+					"category",
+					"categoryLabel",
+					"city",
+					"neighborhood",
+					"thumbnailUrl",
+					"images",
+					"submitterName",
+					"submitterEmail",
+					"submitterPhone",
+					"status",
+					"isFeatured",
+					"isPublished",
+					"createdAt",
+					"updatedAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PaginatedApiResponse_AdminListingDetailResponse_": {
+				"properties": {
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"items": {
+							"$ref": "#/components/schemas/AdminListingDetailResponse"
+						},
+						"type": "array"
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					}
+				},
+				"required": [
+					"success",
+					"message",
+					"data",
+					"pagination"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_null_": {
+				"properties": {
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					}
+				},
+				"required": [
+					"success",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ReorderFeaturedDto": {
+				"properties": {
+					"orderedIds": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"orderedIds"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_AdminListingDetailResponse_": {
+				"properties": {
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/AdminListingDetailResponse"
+					}
+				},
+				"required": [
+					"success",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"FeatureListingDto": {
+				"properties": {
+					"isFeatured": {
+						"type": "boolean"
+					},
+					"featuredOrder": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"isFeatured"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublishStatusDto": {
+				"properties": {
+					"isPublished": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"isPublished"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {
+			"jwt": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		}
+	},
+	"info": {
+		"title": "city-discovery-backend",
+		"version": "1.0.0",
+		"description": "Backend API for City Discovery Platform with Express, TypeScript, tsoa, Prisma, and Resend",
+		"contact": {}
+	},
+	"paths": {
+		"/api/v1/submissions": {
+			"post": {
+				"operationId": "CreateSubmission",
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_SubmissionResponseData_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Validation or missing required fields",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiErrorResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Submit a new listing for moderation review (creates in status 'pending').",
+				"tags": [
+					"Public Submissions"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateSubmissionDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/submissions/{id}": {
+			"get": {
+				"operationId": "GetSubmissionForEdit",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_ListingDetailResponse_"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Invalid edit authorization token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Listing not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiErrorResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Retrieve listing details for submitter editing (requires edit authorization token).",
+				"tags": [
+					"Public Submissions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "editToken",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "UpdateAndResubmit",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_SubmissionResponseData_"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Invalid edit authorization token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiErrorResponse"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Cannot resubmit listing in non-needs_changes status",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiErrorResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Update and resubmit a listing in 'needs_changes' status back to 'pending'.",
+				"tags": [
+					"Public Submissions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "editToken",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ResubmitListingDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/media/upload-signature": {
+			"get": {
+				"operationId": "GetUploadSignature",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_UploadSignatureResponse_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Generate short-lived signed Cloudinary credentials for direct secure client uploads.",
+				"tags": [
+					"Media & Uploads"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Choose 'thumbnail' for cover photos or 'gallery' for detail page photos.",
+						"in": "query",
+						"name": "type",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/MediaUploadType"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/listings": {
+			"get": {
+				"operationId": "GetListings",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PaginatedApiResponse_ListingDetailResponse_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Browse & Search Approved Listings with filters for category, city, neighborhood, date, keyword, and type.",
+				"tags": [
+					"Public Listings"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "category",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/CategoryEnum"
+						}
+					},
+					{
+						"in": "query",
+						"name": "city",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "neighborhood",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "type",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/ListingType"
+						}
+					},
+					{
+						"in": "query",
+						"name": "date",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "startDate",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "endDate",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/listings/upcoming-countdown": {
+			"get": {
+				"operationId": "GetUpcomingCountdown",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_CountdownSliderItem-Array_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Retrieve homepage countdown slider items (featured events first, followed by soonest upcoming events).",
+				"tags": [
+					"Public Listings"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "city",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/listings/{id}": {
+			"get": {
+				"operationId": "GetListingById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_ListingDetailResponse_"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Listing not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiErrorResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get single approved listing detail by ID.",
+				"tags": [
+					"Public Listings"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/cities": {
+			"get": {
+				"operationId": "GetCities",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_CityResponse-Array_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get supported cities list for the frontend city selection pills.\nActive cities have isActive: true and listing counts; upcoming cities have isActive: false.",
+				"tags": [
+					"Public Cities"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/v1/categories": {
+			"get": {
+				"operationId": "GetCategories",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_CategoryResponse-Array_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get all active categories with approved listing counts, ordered by displayOrder.",
+				"tags": [
+					"Public Categories"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/v1/admin/listings/{id}/approve": {
+			"put": {
+				"operationId": "ApproveListing",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_ModerationActionResponse_"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Listing not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiErrorResponse"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Invalid state transition",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiErrorResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Approve a pending listing to make it live (pending -> approved).",
+				"tags": [
+					"Admin Moderation"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/admin/listings/{id}/reject": {
+			"put": {
+				"operationId": "RejectListing",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_ModerationActionResponse_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Rejection reason is required",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Listing not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiErrorResponse"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Invalid state transition",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiErrorResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Reject a pending listing with a mandatory reason (pending -> rejected).",
+				"tags": [
+					"Admin Moderation"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RejectListingDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/admin/listings/{id}/request-changes": {
+			"put": {
+				"operationId": "RequestChanges",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_ModerationActionResponse_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Admin feedback notes are required",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Listing not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiErrorResponse"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Invalid state transition",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiErrorResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Request adjustments from the submitter with feedback notes (pending -> needs_changes).",
+				"tags": [
+					"Admin Moderation"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RequestChangesDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/admin/auth/login": {
+			"post": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_LoginResponse_"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Invalid email or password",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiErrorResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Admin login with email and password, returning JWT bearer token.",
+				"tags": [
+					"Admin Authentication"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LoginDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/admin/auth/me": {
+			"get": {
+				"operationId": "GetProfile",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_AdminUserResponse_"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Admin profile not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiErrorResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Retrieve current authenticated admin profile.",
+				"tags": [
+					"Admin Authentication"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/api/v1/admin/listings": {
+			"get": {
+				"operationId": "GetAdminListings",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PaginatedApiResponse_AdminListingDetailResponse_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get all listings for moderation queue and admin management with filters.",
+				"tags": [
+					"Admin Listings"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/ListingStatus"
+						}
+					},
+					{
+						"in": "query",
+						"name": "type",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/ListingType"
+						}
+					},
+					{
+						"in": "query",
+						"name": "city",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/admin/listings/reorder-featured": {
+			"put": {
+				"operationId": "ReorderFeatured",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_null_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Bulk reorder featured listings in the homepage slider.",
+				"tags": [
+					"Admin Listings"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ReorderFeaturedDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/admin/listings/{id}": {
+			"get": {
+				"operationId": "GetAdminListingById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_AdminListingDetailResponse_"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Listing not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiErrorResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get full details of a listing (including submitter info & moderation history) by ID.",
+				"tags": [
+					"Admin Listings"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/admin/listings/{id}/feature": {
+			"put": {
+				"operationId": "FeatureListing",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_AdminListingDetailResponse_"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Listing not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiErrorResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Toggle featured status and set slider display order for a listing.",
+				"tags": [
+					"Admin Listings"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/FeatureListingDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/admin/listings/{id}/publish-status": {
+			"put": {
+				"operationId": "SetPublishStatus",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_AdminListingDetailResponse_"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Listing not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiErrorResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Toggle publish/unpublish visibility for a live listing.",
+				"tags": [
+					"Admin Listings"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PublishStatusDto"
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}
