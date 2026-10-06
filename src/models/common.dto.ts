@@ -51,4 +51,5 @@ export interface CityResponse {
   state: string;
   isActive: boolean;
   listingCount?: number;
+  neighborhoods?: string[];
 }

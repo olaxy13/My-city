@@ -314,6 +314,7 @@ const models: TsoaRoute.Models = {
             "state": {"dataType":"string","required":true},
             "isActive": {"dataType":"boolean","required":true},
             "listingCount": {"dataType":"double"},
+            "neighborhoods": {"dataType":"array","array":{"dataType":"string"}},
         },
         "additionalProperties": false,
     },
@@ -324,6 +325,16 @@ const models: TsoaRoute.Models = {
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
             "data": {"dataType":"array","array":{"dataType":"refObject","ref":"CityResponse"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ApiResponse_string-Array_": {
+        "dataType": "refObject",
+        "properties": {
+            "success": {"dataType":"boolean","required":true},
+            "message": {"dataType":"string","required":true},
+            "data": {"dataType":"array","array":{"dataType":"string"},"required":true},
         },
         "additionalProperties": false,
     },
@@ -797,6 +808,36 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getCities',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsCitiesController_getNeighborhoods: Record<string, TsoaRoute.ParameterSchema> = {
+                cityId: {"in":"path","name":"cityId","required":true,"dataType":"string"},
+        };
+        app.get('/api/v1/cities/:cityId/neighborhoods',
+            ...(fetchMiddlewares<RequestHandler>(CitiesController)),
+            ...(fetchMiddlewares<RequestHandler>(CitiesController.prototype.getNeighborhoods)),
+
+            async function CitiesController_getNeighborhoods(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsCitiesController_getNeighborhoods, request, response });
+
+                const controller = new CitiesController();
+
+              await templateService.apiHandler({
+                methodName: 'getNeighborhoods',
                 controller,
                 response,
                 next,
