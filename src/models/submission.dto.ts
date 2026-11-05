@@ -1,6 +1,13 @@
 import { ListingType, CategoryEnum } from './common.dto';
 import { EventDetailsDto, RestaurantDetailsDto, FacilityDetailsDto } from './listing.dto';
 
+export interface CreateTicketTierDto {
+  name: string;
+  price: number;
+  totalCapacity: number;
+  description?: string;
+}
+
 export interface CreateSubmissionDto {
   listingType: ListingType;
   title: string;
@@ -28,6 +35,12 @@ export interface CreateSubmissionDto {
   eventDetails?: EventDetailsDto;
   restaurantDetails?: RestaurantDetailsDto;
   facilityDetails?: FacilityDetailsDto;
+
+  // Event Ticketing & Organizer Payout
+  ticketTiers?: CreateTicketTierDto[];
+  payoutBankCode?: string;
+  payoutAccountNumber?: string;
+  payoutAccountName?: string;
 }
 
 export interface ResubmitListingDto {

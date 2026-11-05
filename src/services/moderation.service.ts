@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { prisma } from '../config/prisma';
 import { EmailService } from './email.service';
 import { ModerationActionResponse } from '../models/admin.dto';
@@ -16,6 +17,7 @@ export class ModerationService {
   static async approveListing(listingId: string): Promise<ModerationActionResponse> {
     const listing = await prisma.listing.findUnique({
       where: { id: listingId },
+      include: { eventDetails: true },
     });
 
     if (!listing) {
@@ -28,6 +30,33 @@ export class ModerationService {
       );
     }
 
+    // Determine 6-digit gate check-in PIN for event listings
+    // If a 6-digit PIN was already generated and saved (e.g. in payout/commission settings), preserve it!
+    // Otherwise, generate a fresh cryptographically secure 6-digit check-in PIN and save it.
+    let checkInPin: string | null = null;
+    if (listing.listingType?.toLowerCase() === 'event') {
+      const existingPin = listing.eventDetails?.checkInPin?.trim();
+      if (existingPin && /^\d{6}$/.test(existingPin)) {
+        checkInPin = existingPin;
+      } else {
+        checkInPin = String(crypto.randomInt(100000, 999999));
+        if (listing.eventDetails) {
+          await prisma.eventDetails.update({
+            where: { listingId },
+            data: { checkInPin },
+          });
+        } else {
+          await prisma.eventDetails.create({
+            data: {
+              listingId,
+              startDateTime: new Date(),
+              checkInPin,
+            },
+          });
+        }
+      }
+    }
+
     const updated = await prisma.listing.update({
       where: { id: listingId },
       data: {
@@ -37,13 +66,19 @@ export class ModerationService {
       },
     });
 
-    // Fire async notification email
-    EmailService.sendListingApprovedEmail(
-      updated.submitterEmail,
-      updated.submitterName,
-      updated.title,
-      updated.id
-    ).catch((err) => console.error('Failed to send approval email:', err));
+    // Send notification email (includes gate PIN for events)
+    try {
+      await EmailService.sendListingApprovedEmail(
+        updated.submitterEmail,
+        updated.submitterName,
+        updated.title,
+        updated.id,
+        updated.listingType,
+        checkInPin
+      );
+    } catch (err) {
+      console.error('[ModerationService.approveListing] Failed to send approval email:', err);
+    }
 
     return {
       id: updated.id,

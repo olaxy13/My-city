@@ -7,6 +7,197 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"AttendeeDto": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"InitializeTicketOrderDto": {
+				"properties": {
+					"listingId": {
+						"type": "string"
+					},
+					"tierId": {
+						"type": "string"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"customerName": {
+						"type": "string"
+					},
+					"customerEmail": {
+						"type": "string"
+					},
+					"customerPhone": {
+						"type": "string"
+					},
+					"callbackUrl": {
+						"type": "string"
+					},
+					"attendees": {
+						"items": {
+							"$ref": "#/components/schemas/AttendeeDto"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"listingId",
+					"tierId",
+					"quantity",
+					"customerName",
+					"customerEmail",
+					"customerPhone"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"_36_Enums.CommissionType": {
+				"type": "string",
+				"enum": [
+					"PERCENTAGE",
+					"FLAT_FEE"
+				]
+			},
+			"_36_Enums.ListingStatus": {
+				"type": "string",
+				"enum": [
+					"pending",
+					"needs_changes",
+					"approved",
+					"rejected"
+				]
+			},
+			"_36_Enums.ListingType": {
+				"type": "string",
+				"enum": [
+					"event",
+					"restaurant",
+					"facility"
+				]
+			},
+			"_36_Enums.CategoryEnum": {
+				"type": "string",
+				"enum": [
+					"music",
+					"food_drink",
+					"sports",
+					"comedy",
+					"arts_culture",
+					"nightlife",
+					"religious",
+					"education",
+					"lifestyle",
+					"wellness"
+				]
+			},
+			"JsonValue": {
+				"anyOf": [
+					{
+						"type": "string"
+					},
+					{
+						"type": "number",
+						"format": "double"
+					},
+					{
+						"type": "boolean"
+					},
+					{
+						"$ref": "#/components/schemas/JsonObject"
+					},
+					{
+						"$ref": "#/components/schemas/JsonArray"
+					}
+				],
+				"nullable": true,
+				"description": "From https://github.com/sindresorhus/type-fest/\r\nMatches any valid JSON value."
+			},
+			"JsonObject": {
+				"properties": {},
+				"additionalProperties": {
+					"$ref": "#/components/schemas/JsonValue"
+				},
+				"type": "object",
+				"description": "From https://github.com/sindresorhus/type-fest/\r\nMatches a JSON object.\r\nThis type can be useful to enforce some input to be JSON-compatible or as a super-type to be extended from."
+			},
+			"JsonArray": {
+				"description": "From https://github.com/sindresorhus/type-fest/\r\nMatches a JSON array.",
+				"properties": {},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"_36_Enums.OrderStatus": {
+				"type": "string",
+				"enum": [
+					"PENDING",
+					"PAID",
+					"FAILED"
+				]
+			},
+			"TicketEmailItem": {
+				"properties": {
+					"ticketCode": {
+						"type": "string"
+					},
+					"tierName": {
+						"type": "string"
+					},
+					"attendeeName": {
+						"type": "string"
+					},
+					"attendeeEmail": {
+						"type": "string"
+					},
+					"qrDataUrl": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"ticketCode",
+					"tierName",
+					"attendeeName",
+					"qrDataUrl"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CheckInRequestDto": {
+				"properties": {
+					"tokenOrCode": {
+						"type": "string",
+						"description": "The QR token or ticket code scanned from the attendee's phone"
+					},
+					"eventId": {
+						"type": "string",
+						"description": "Optional event ID to lock scanning specifically to this event"
+					},
+					"pin": {
+						"type": "string",
+						"description": "Optional gate PIN configured for this event"
+					}
+				},
+				"required": [
+					"tokenOrCode"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ListingType": {
 				"type": "string",
 				"enum": [
@@ -141,6 +332,21 @@
 					},
 					"isRecurring": {
 						"type": "boolean"
+					},
+					"subaccountCode": {
+						"type": "string",
+						"nullable": true
+					},
+					"commissionType": {
+						"type": "string"
+					},
+					"commissionValue": {
+						"type": "number",
+						"format": "double"
+					},
+					"checkInPin": {
+						"type": "string",
+						"nullable": true
 					}
 				},
 				"required": [
@@ -205,6 +411,31 @@
 				},
 				"required": [
 					"facilityCategory"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateTicketTierDto": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"price": {
+						"type": "number",
+						"format": "double"
+					},
+					"totalCapacity": {
+						"type": "number",
+						"format": "double"
+					},
+					"description": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name",
+					"price",
+					"totalCapacity"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -281,6 +512,21 @@
 					},
 					"facilityDetails": {
 						"$ref": "#/components/schemas/FacilityDetailsDto"
+					},
+					"ticketTiers": {
+						"items": {
+							"$ref": "#/components/schemas/CreateTicketTierDto"
+						},
+						"type": "array"
+					},
+					"payoutBankCode": {
+						"type": "string"
+					},
+					"payoutAccountNumber": {
+						"type": "string"
+					},
+					"payoutAccountName": {
+						"type": "string"
 					}
 				},
 				"required": [
@@ -326,6 +572,45 @@
 					"approved",
 					"rejected"
 				]
+			},
+			"TicketTierResponse": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string",
+						"nullable": true
+					},
+					"price": {
+						"type": "number",
+						"format": "double"
+					},
+					"totalCapacity": {
+						"type": "number",
+						"format": "double"
+					},
+					"soldCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"isSoldOut": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"price",
+					"totalCapacity",
+					"soldCount",
+					"isSoldOut"
+				],
+				"type": "object",
+				"additionalProperties": false
 			},
 			"ListingDetailResponse": {
 				"properties": {
@@ -431,6 +716,12 @@
 							}
 						],
 						"nullable": true
+					},
+					"ticketTiers": {
+						"items": {
+							"$ref": "#/components/schemas/TicketTierResponse"
+						},
+						"type": "array"
 					},
 					"createdAt": {
 						"anyOf": [
@@ -799,6 +1090,12 @@
 					"listingCount": {
 						"type": "number",
 						"format": "double"
+					},
+					"neighborhoods": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
 					}
 				},
 				"required": [
@@ -821,6 +1118,29 @@
 					"data": {
 						"items": {
 							"$ref": "#/components/schemas/CityResponse"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"success",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_string-Array_": {
+				"properties": {
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"items": {
+							"type": "string"
 						},
 						"type": "array"
 					}
@@ -1210,6 +1530,12 @@
 						],
 						"nullable": true
 					},
+					"ticketTiers": {
+						"items": {
+							"$ref": "#/components/schemas/TicketTierResponse"
+						},
+						"type": "array"
+					},
 					"createdAt": {
 						"anyOf": [
 							{
@@ -1369,6 +1695,51 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"ApiResponse_any_": {
+				"properties": {
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {}
+				},
+				"required": [
+					"success",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateEventCommissionDto": {
+				"properties": {
+					"commissionType": {
+						"type": "string",
+						"enum": [
+							"PERCENTAGE",
+							"FLAT_FEE"
+						]
+					},
+					"commissionValue": {
+						"type": "number",
+						"format": "double"
+					},
+					"subaccountCode": {
+						"type": "string"
+					},
+					"checkInPin": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"commissionType",
+					"commissionValue"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {
@@ -1386,6 +1757,1187 @@
 		"contact": {}
 	},
 	"paths": {
+		"/api/tickets/payment/initialize": {
+			"post": {
+				"operationId": "InitializeOrder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"data": {
+											"properties": {
+												"authorizationUrl": {
+													"type": "string"
+												},
+												"reference": {
+													"type": "string"
+												},
+												"orderId": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"authorizationUrl",
+												"reference",
+												"orderId"
+											],
+											"type": "object"
+										},
+										"success": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"data",
+										"success"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Initialize a ticket purchase and get checkout URL",
+				"tags": [
+					"Ticket Payments"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/InitializeTicketOrderDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/tickets/payment/verify/{reference}": {
+			"get": {
+				"operationId": "VerifyOrder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"properties": {
+												"tickets": {
+													"items": {
+														"$ref": "#/components/schemas/TicketEmailItem"
+													},
+													"type": "array"
+												},
+												"order": {
+													"allOf": [
+														{
+															"properties": {
+																"items": {
+																	"items": {
+																		"allOf": [
+																			{
+																				"properties": {
+																					"tier": {
+																						"properties": {
+																							"soldCount": {
+																								"type": "number",
+																								"format": "double"
+																							},
+																							"totalCapacity": {
+																								"type": "number",
+																								"format": "double"
+																							},
+																							"price": {
+																								"type": "number",
+																								"format": "double"
+																							},
+																							"name": {
+																								"type": "string"
+																							},
+																							"description": {
+																								"type": "string"
+																							},
+																							"listingId": {
+																								"type": "string"
+																							},
+																							"updatedAt": {
+																								"type": "string",
+																								"format": "date-time"
+																							},
+																							"createdAt": {
+																								"type": "string",
+																								"format": "date-time"
+																							},
+																							"id": {
+																								"type": "string"
+																							}
+																						},
+																						"required": [
+																							"soldCount",
+																							"totalCapacity",
+																							"price",
+																							"name",
+																							"description",
+																							"listingId",
+																							"updatedAt",
+																							"createdAt",
+																							"id"
+																						],
+																						"type": "object"
+																					}
+																				},
+																				"required": [
+																					"tier"
+																				],
+																				"type": "object"
+																			},
+																			{
+																				"properties": {
+																					"orderId": {
+																						"type": "string"
+																					},
+																					"ticketTierId": {
+																						"type": "string"
+																					},
+																					"subtotal": {
+																						"type": "number",
+																						"format": "double"
+																					},
+																					"unitPrice": {
+																						"type": "number",
+																						"format": "double"
+																					},
+																					"quantity": {
+																						"type": "number",
+																						"format": "double"
+																					},
+																					"createdAt": {
+																						"type": "string",
+																						"format": "date-time"
+																					},
+																					"id": {
+																						"type": "string"
+																					}
+																				},
+																				"required": [
+																					"orderId",
+																					"ticketTierId",
+																					"subtotal",
+																					"unitPrice",
+																					"quantity",
+																					"createdAt",
+																					"id"
+																				],
+																				"type": "object"
+																			}
+																		]
+																	},
+																	"type": "array"
+																},
+																"listing": {
+																	"allOf": [
+																		{
+																			"properties": {
+																				"eventDetails": {
+																					"properties": {
+																						"checkInPin": {
+																							"type": "string"
+																						},
+																						"commissionValue": {
+																							"type": "number",
+																							"format": "double"
+																						},
+																						"commissionType": {
+																							"$ref": "#/components/schemas/_36_Enums.CommissionType"
+																						},
+																						"subaccountCode": {
+																							"type": "string"
+																						},
+																						"payoutAccountName": {
+																							"type": "string"
+																						},
+																						"payoutAccountNumber": {
+																							"type": "string"
+																						},
+																						"payoutBankCode": {
+																							"type": "string"
+																						},
+																						"isRecurring": {
+																							"type": "boolean"
+																						},
+																						"endDateTime": {
+																							"type": "string",
+																							"format": "date-time"
+																						},
+																						"startDateTime": {
+																							"type": "string",
+																							"format": "date-time"
+																						},
+																						"listingId": {
+																							"type": "string"
+																						},
+																						"id": {
+																							"type": "string"
+																						}
+																					},
+																					"required": [
+																						"checkInPin",
+																						"commissionValue",
+																						"commissionType",
+																						"subaccountCode",
+																						"payoutAccountName",
+																						"payoutAccountNumber",
+																						"payoutBankCode",
+																						"isRecurring",
+																						"endDateTime",
+																						"startDateTime",
+																						"listingId",
+																						"id"
+																					],
+																					"type": "object"
+																				}
+																			},
+																			"required": [
+																				"eventDetails"
+																			],
+																			"type": "object"
+																		},
+																		{
+																			"properties": {
+																				"isPublished": {
+																					"type": "boolean"
+																				},
+																				"featuredOrder": {
+																					"type": "number",
+																					"format": "double"
+																				},
+																				"isFeatured": {
+																					"type": "boolean"
+																				},
+																				"adminNotes": {
+																					"type": "string"
+																				},
+																				"rejectionReason": {
+																					"type": "string"
+																				},
+																				"submitterPhone": {
+																					"type": "string"
+																				},
+																				"submitterEmail": {
+																					"type": "string"
+																				},
+																				"submitterName": {
+																					"type": "string"
+																				},
+																				"externalLink": {
+																					"type": "string"
+																				},
+																				"contactEmail": {
+																					"type": "string"
+																				},
+																				"contactPhone": {
+																					"type": "string"
+																				},
+																				"legalDocumentUrls": {
+																					"items": {
+																						"type": "string"
+																					},
+																					"type": "array"
+																				},
+																				"thumbnailUrl": {
+																					"type": "string"
+																				},
+																				"longitude": {
+																					"type": "number",
+																					"format": "double"
+																				},
+																				"latitude": {
+																					"type": "number",
+																					"format": "double"
+																				},
+																				"address": {
+																					"type": "string"
+																				},
+																				"neighborhood": {
+																					"type": "string"
+																				},
+																				"city": {
+																					"type": "string"
+																				},
+																				"category": {
+																					"$ref": "#/components/schemas/_36_Enums.CategoryEnum"
+																				},
+																				"description": {
+																					"type": "string"
+																				},
+																				"title": {
+																					"type": "string"
+																				},
+																				"listingType": {
+																					"$ref": "#/components/schemas/_36_Enums.ListingType"
+																				},
+																				"editToken": {
+																					"type": "string"
+																				},
+																				"updatedAt": {
+																					"type": "string",
+																					"format": "date-time"
+																				},
+																				"createdAt": {
+																					"type": "string",
+																					"format": "date-time"
+																				},
+																				"status": {
+																					"$ref": "#/components/schemas/_36_Enums.ListingStatus"
+																				},
+																				"id": {
+																					"type": "string"
+																				}
+																			},
+																			"required": [
+																				"isPublished",
+																				"featuredOrder",
+																				"isFeatured",
+																				"adminNotes",
+																				"rejectionReason",
+																				"submitterPhone",
+																				"submitterEmail",
+																				"submitterName",
+																				"externalLink",
+																				"contactEmail",
+																				"contactPhone",
+																				"legalDocumentUrls",
+																				"thumbnailUrl",
+																				"longitude",
+																				"latitude",
+																				"address",
+																				"neighborhood",
+																				"city",
+																				"category",
+																				"description",
+																				"title",
+																				"listingType",
+																				"editToken",
+																				"updatedAt",
+																				"createdAt",
+																				"status",
+																				"id"
+																			],
+																			"type": "object"
+																		}
+																	]
+																}
+															},
+															"required": [
+																"items",
+																"listing"
+															],
+															"type": "object"
+														},
+														{
+															"properties": {
+																"listingId": {
+																	"type": "string"
+																},
+																"updatedAt": {
+																	"type": "string",
+																	"format": "date-time"
+																},
+																"createdAt": {
+																	"type": "string",
+																	"format": "date-time"
+																},
+																"paidAt": {
+																	"type": "string",
+																	"format": "date-time"
+																},
+																"paymentProvider": {
+																	"type": "string"
+																},
+																"status": {
+																	"$ref": "#/components/schemas/_36_Enums.OrderStatus"
+																},
+																"organizerAmount": {
+																	"type": "number",
+																	"format": "double"
+																},
+																"commission": {
+																	"type": "number",
+																	"format": "double"
+																},
+																"totalAmount": {
+																	"type": "number",
+																	"format": "double"
+																},
+																"attendeeDetails": {
+																	"$ref": "#/components/schemas/JsonValue"
+																},
+																"customerPhone": {
+																	"type": "string"
+																},
+																"customerEmail": {
+																	"type": "string"
+																},
+																"customerName": {
+																	"type": "string"
+																},
+																"reference": {
+																	"type": "string"
+																},
+																"id": {
+																	"type": "string"
+																}
+															},
+															"required": [
+																"listingId",
+																"updatedAt",
+																"createdAt",
+																"paidAt",
+																"paymentProvider",
+																"status",
+																"organizerAmount",
+																"commission",
+																"totalAmount",
+																"attendeeDetails",
+																"customerPhone",
+																"customerEmail",
+																"customerName",
+																"reference",
+																"id"
+															],
+															"type": "object"
+														}
+													]
+												},
+												"message": {
+													"type": "string"
+												},
+												"isSuccess": {
+													"type": "boolean"
+												}
+											},
+											"required": [
+												"tickets",
+												"order",
+												"message",
+												"isSuccess"
+											],
+											"type": "object"
+										},
+										{
+											"properties": {
+												"tickets": {},
+												"order": {},
+												"message": {
+													"type": "string"
+												},
+												"isSuccess": {
+													"type": "boolean"
+												}
+											},
+											"required": [
+												"message",
+												"isSuccess"
+											],
+											"type": "object"
+										}
+									]
+								}
+							}
+						}
+					}
+				},
+				"description": "Frontend callback verification (instant redirect verification)",
+				"tags": [
+					"Ticket Payments"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "reference",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/tickets/payment/webhook/paystack": {
+			"post": {
+				"operationId": "HandleWebhook",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"properties": {
+												"message": {
+													"type": "string"
+												},
+												"success": {
+													"type": "boolean"
+												}
+											},
+											"required": [
+												"message",
+												"success"
+											],
+											"type": "object"
+										},
+										{
+											"properties": {
+												"message": {},
+												"success": {
+													"type": "boolean"
+												}
+											},
+											"required": [
+												"success"
+											],
+											"type": "object"
+										}
+									]
+								}
+							}
+						}
+					}
+				},
+				"description": "Secure Paystack Webhook Receiver",
+				"tags": [
+					"Ticket Payments"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "header",
+						"name": "x-paystack-signature",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {}
+						}
+					}
+				}
+			}
+		},
+		"/api/tickets/payment/check-in": {
+			"post": {
+				"operationId": "CheckInTicket",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"properties": {
+												"eventTitle": {},
+												"attendeePhone": {},
+												"attendeeEmail": {},
+												"checkedInAt": {},
+												"tierName": {},
+												"attendeeName": {},
+												"ticketCode": {},
+												"message": {
+													"type": "string"
+												},
+												"status": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"message",
+												"status"
+											],
+											"type": "object"
+										},
+										{
+											"properties": {
+												"eventTitle": {},
+												"attendeePhone": {},
+												"attendeeEmail": {},
+												"checkedInAt": {},
+												"tierName": {},
+												"attendeeName": {},
+												"ticketCode": {
+													"type": "string"
+												},
+												"message": {
+													"type": "string"
+												},
+												"status": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"ticketCode",
+												"message",
+												"status"
+											],
+											"type": "object"
+										},
+										{
+											"properties": {
+												"eventTitle": {},
+												"attendeePhone": {},
+												"attendeeEmail": {},
+												"checkedInAt": {
+													"type": "string",
+													"format": "date-time"
+												},
+												"tierName": {
+													"type": "string"
+												},
+												"attendeeName": {
+													"type": "string"
+												},
+												"ticketCode": {
+													"type": "string"
+												},
+												"message": {
+													"type": "string"
+												},
+												"status": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"checkedInAt",
+												"tierName",
+												"attendeeName",
+												"ticketCode",
+												"message",
+												"status"
+											],
+											"type": "object"
+										},
+										{
+											"properties": {
+												"checkedInAt": {
+													"type": "string",
+													"format": "date-time"
+												},
+												"eventTitle": {
+													"type": "string"
+												},
+												"tierName": {
+													"type": "string"
+												},
+												"attendeePhone": {
+													"type": "string"
+												},
+												"attendeeEmail": {
+													"type": "string"
+												},
+												"attendeeName": {
+													"type": "string"
+												},
+												"ticketCode": {
+													"type": "string"
+												},
+												"message": {
+													"type": "string"
+												},
+												"status": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"checkedInAt",
+												"eventTitle",
+												"tierName",
+												"attendeePhone",
+												"attendeeEmail",
+												"attendeeName",
+												"ticketCode",
+												"message",
+												"status"
+											],
+											"type": "object"
+										}
+									]
+								}
+							}
+						}
+					}
+				},
+				"description": "Gate Scanner Check-in Endpoint",
+				"tags": [
+					"Ticket Payments"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CheckInRequestDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/tickets/payment/payouts/banks": {
+			"get": {
+				"operationId": "GetBanks",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"data": {
+											"items": {
+												"properties": {
+													"code": {
+														"type": "string"
+													},
+													"name": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"code",
+													"name"
+												],
+												"type": "object"
+											},
+											"type": "array"
+										},
+										"success": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"data",
+										"success"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get list of supported settlement banks in Nigeria",
+				"tags": [
+					"Ticket Payments"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/tickets/payment/payouts/resolve-account": {
+			"get": {
+				"operationId": "ResolveAccount",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"properties": {
+												"message": {},
+												"data": {
+													"properties": {
+														"accountName": {
+															"type": "string"
+														}
+													},
+													"required": [
+														"accountName"
+													],
+													"type": "object"
+												},
+												"success": {
+													"type": "boolean"
+												}
+											},
+											"required": [
+												"data",
+												"success"
+											],
+											"type": "object"
+										},
+										{
+											"properties": {
+												"data": {},
+												"message": {},
+												"success": {
+													"type": "boolean"
+												}
+											},
+											"required": [
+												"message",
+												"success"
+											],
+											"type": "object"
+										}
+									]
+								}
+							}
+						}
+					}
+				},
+				"description": "Resolve and verify Nigerian bank account holder name",
+				"tags": [
+					"Ticket Payments"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "accountNumber",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "bankCode",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/tickets/payment/payouts/subaccount": {
+			"post": {
+				"operationId": "CreateSubaccount",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"data": {
+											"properties": {
+												"subaccountCode": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"subaccountCode"
+											],
+											"type": "object"
+										},
+										"success": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"data",
+										"success"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create Paystack Subaccount for an organizer",
+				"tags": [
+					"Ticket Payments"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"accountNumber": {
+										"type": "string"
+									},
+									"bankCode": {
+										"type": "string"
+									},
+									"businessName": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"accountNumber",
+									"bankCode",
+									"businessName"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/tickets/payment/resend": {
+			"post": {
+				"operationId": "ResendTicket",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"data": {
+											"properties": {
+												"recipientEmail": {
+													"type": "string"
+												},
+												"attendeeName": {
+													"type": "string"
+												},
+												"ticketCode": {
+													"type": "string"
+												},
+												"message": {
+													"type": "string"
+												},
+												"success": {
+													"type": "boolean"
+												}
+											},
+											"required": [
+												"recipientEmail",
+												"attendeeName",
+												"ticketCode",
+												"message",
+												"success"
+											],
+											"type": "object"
+										},
+										"success": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"data",
+										"success"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Resend an individual ticket email pass (allows updating recipient email if a typo occurred)",
+				"tags": [
+					"Ticket Payments"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"newEmail": {
+										"type": "string"
+									},
+									"ticketCode": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"ticketCode"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/tickets/check-in": {
+			"post": {
+				"operationId": "CheckInTicket",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"properties": {
+												"eventTitle": {},
+												"attendeePhone": {},
+												"attendeeEmail": {},
+												"checkedInAt": {},
+												"tierName": {},
+												"attendeeName": {},
+												"ticketCode": {},
+												"message": {
+													"type": "string"
+												},
+												"status": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"message",
+												"status"
+											],
+											"type": "object"
+										},
+										{
+											"properties": {
+												"eventTitle": {},
+												"attendeePhone": {},
+												"attendeeEmail": {},
+												"checkedInAt": {},
+												"tierName": {},
+												"attendeeName": {},
+												"ticketCode": {
+													"type": "string"
+												},
+												"message": {
+													"type": "string"
+												},
+												"status": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"ticketCode",
+												"message",
+												"status"
+											],
+											"type": "object"
+										},
+										{
+											"properties": {
+												"eventTitle": {},
+												"attendeePhone": {},
+												"attendeeEmail": {},
+												"checkedInAt": {
+													"type": "string",
+													"format": "date-time"
+												},
+												"tierName": {
+													"type": "string"
+												},
+												"attendeeName": {
+													"type": "string"
+												},
+												"ticketCode": {
+													"type": "string"
+												},
+												"message": {
+													"type": "string"
+												},
+												"status": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"checkedInAt",
+												"tierName",
+												"attendeeName",
+												"ticketCode",
+												"message",
+												"status"
+											],
+											"type": "object"
+										},
+										{
+											"properties": {
+												"checkedInAt": {
+													"type": "string",
+													"format": "date-time"
+												},
+												"eventTitle": {
+													"type": "string"
+												},
+												"tierName": {
+													"type": "string"
+												},
+												"attendeePhone": {
+													"type": "string"
+												},
+												"attendeeEmail": {
+													"type": "string"
+												},
+												"attendeeName": {
+													"type": "string"
+												},
+												"ticketCode": {
+													"type": "string"
+												},
+												"message": {
+													"type": "string"
+												},
+												"status": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"checkedInAt",
+												"eventTitle",
+												"tierName",
+												"attendeePhone",
+												"attendeeEmail",
+												"attendeeName",
+												"ticketCode",
+												"message",
+												"status"
+											],
+											"type": "object"
+										}
+									]
+								}
+							}
+						}
+					}
+				},
+				"description": "Gate Scanner Check-in Endpoint (Alias Route)",
+				"tags": [
+					"Ticket Payments"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CheckInRequestDto"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/api/v1/submissions": {
 			"post": {
 				"operationId": "CreateSubmission",
@@ -1800,6 +3352,48 @@
 				],
 				"security": [],
 				"parameters": []
+			}
+		},
+		"/api/v1/cities/{cityId}/neighborhoods": {
+			"get": {
+				"operationId": "GetNeighborhoods",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_string-Array_"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "City not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiErrorResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get list of major neighborhoods for a given city ID (e.g. 'lagos', 'abeokuta')",
+				"tags": [
+					"Public Cities"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "cityId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/api/v1/categories": {
@@ -2390,6 +3984,61 @@
 						"application/json": {
 							"schema": {
 								"$ref": "#/components/schemas/PublishStatusDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/admin/listings/{id}/commission": {
+			"put": {
+				"operationId": "UpdateEventCommission",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_any_"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Event details not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiErrorResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Listings"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateEventCommissionDto"
 							}
 						}
 					}

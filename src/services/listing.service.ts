@@ -213,6 +213,7 @@ export class ListingService {
         eventDetails: true,
         restaurantDetails: true,
         facilityDetails: true,
+        ticketTiers: { orderBy: { price: 'asc' } },
       },
     });
 
@@ -245,6 +246,15 @@ export class ListingService {
       eventDetails: item.eventDetails,
       restaurantDetails: item.restaurantDetails,
       facilityDetails: item.facilityDetails,
+      ticketTiers: item.ticketTiers?.map((tier) => ({
+        id: tier.id,
+        name: tier.name,
+        description: tier.description,
+        price: tier.price,
+        totalCapacity: tier.totalCapacity,
+        soldCount: tier.soldCount,
+        isSoldOut: tier.soldCount >= tier.totalCapacity,
+      })) || [],
       createdAt: item.createdAt,
       updatedAt: item.updatedAt,
     };
@@ -339,6 +349,9 @@ export class ListingService {
         startDateTime: new Date(dto.eventDetails.startDateTime),
         endDateTime: dto.eventDetails.endDateTime ? new Date(dto.eventDetails.endDateTime) : null,
         isRecurring: dto.eventDetails.isRecurring || false,
+        payoutBankCode: dto.payoutBankCode?.trim() || null,
+        payoutAccountNumber: dto.payoutAccountNumber?.trim() || null,
+        payoutAccountName: dto.payoutAccountName?.trim() || null,
       },
     };
   }
@@ -428,6 +441,17 @@ export class ListingService {
         eventDetails: this.buildEventDetailsCreate(dto),
         restaurantDetails: this.buildRestaurantDetailsCreate(dto),
         facilityDetails: this.buildFacilityDetailsCreate(dto),
+        // Persist organizer-submitted ticket tiers
+        ticketTiers: dto.listingType === 'event' && dto.ticketTiers?.length
+          ? {
+              create: dto.ticketTiers.map((tier) => ({
+                name: tier.name.trim(),
+                description: tier.description?.trim() || null,
+                price: tier.price,
+                totalCapacity: tier.totalCapacity,
+              })),
+            }
+          : undefined,
       },
     });
 

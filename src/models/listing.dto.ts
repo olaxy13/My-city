@@ -10,6 +10,20 @@ export interface EventDetailsDto {
   startDateTime: string | Date;
   endDateTime?: string | Date | null;
   isRecurring?: boolean;
+  subaccountCode?: string | null;
+  commissionType?: string;
+  commissionValue?: number;
+  checkInPin?: string | null;
+}
+
+export interface TicketTierResponse {
+  id: string;
+  name: string;
+  description?: string | null;
+  price: number;
+  totalCapacity: number;
+  soldCount: number;
+  isSoldOut: boolean;
 }
 
 export interface RestaurantDetailsDto {
@@ -54,6 +68,7 @@ export interface ListingDetailResponse {
   eventDetails?: EventDetailsDto | null;
   restaurantDetails?: RestaurantDetailsDto | null;
   facilityDetails?: FacilityDetailsDto | null;
+  ticketTiers?: TicketTierResponse[];
   createdAt: string | Date;
   updatedAt: string | Date;
 }

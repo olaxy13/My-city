@@ -4,6 +4,7 @@ import {
   EventDetailsDto,
   RestaurantDetailsDto,
   FacilityDetailsDto,
+  TicketTierResponse,
 } from './listing.dto';
 
 export interface AdminListingDetailResponse {
@@ -37,6 +38,7 @@ export interface AdminListingDetailResponse {
   eventDetails?: EventDetailsDto | null;
   restaurantDetails?: RestaurantDetailsDto | null;
   facilityDetails?: FacilityDetailsDto | null;
+  ticketTiers?: TicketTierResponse[];
   createdAt: string | Date;
   updatedAt: string | Date;
 }

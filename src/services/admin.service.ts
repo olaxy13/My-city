@@ -4,6 +4,7 @@ import { ListingStatus, ListingType, CategoryEnum } from '../models/common.dto';
 import { AdminListingDetailResponse } from '../models/admin.dto';
 import { getCategoryLabel } from '../utils/categories';
 import { NotFoundError } from '../utils/errors';
+import { EmailService } from './email.service';
 
 export interface AdminListingFilterParams {
   status?: ListingStatus;
@@ -12,6 +13,14 @@ export interface AdminListingFilterParams {
   search?: string;
   page?: number;
   limit?: number;
+
+}
+
+export interface UpdateEventCommissionDto {
+  commissionType: 'PERCENTAGE' | 'FLAT_FEE';
+  commissionValue: number;
+  subaccountCode?: string;
+  checkInPin?: string;
 }
 
 export class AdminService {
@@ -47,6 +56,15 @@ export class AdminService {
       eventDetails: item.eventDetails,
       restaurantDetails: item.restaurantDetails,
       facilityDetails: item.facilityDetails,
+      ticketTiers: item.ticketTiers?.map((tier: any) => ({
+        id: tier.id,
+        name: tier.name,
+        description: tier.description,
+        price: tier.price,
+        totalCapacity: tier.totalCapacity,
+        soldCount: tier.soldCount,
+        isSoldOut: tier.soldCount >= tier.totalCapacity,
+      })) || [],
       createdAt: item.createdAt,
       updatedAt: item.updatedAt,
     };
@@ -78,21 +96,19 @@ export class AdminService {
       ];
     }
 
-    const [total, items] = await Promise.all([
-      prisma.listing.count({ where }),
-      prisma.listing.findMany({
-        where,
-        skip,
-        take: limit,
-        orderBy: [{ createdAt: 'desc' }],
-        include: {
-          images: { orderBy: { sortOrder: 'asc' } },
-          eventDetails: true,
-          restaurantDetails: true,
-          facilityDetails: true,
-        },
-      }),
-    ]);
+    const total = await prisma.listing.count({ where });
+    const items = await prisma.listing.findMany({
+      where,
+      skip,
+      take: limit,
+      orderBy: [{ createdAt: 'desc' }],
+      include: {
+        images: { orderBy: { sortOrder: 'asc' } },
+        eventDetails: true,
+        restaurantDetails: true,
+        facilityDetails: true,
+      },
+    });
 
     return {
       items: items.map((item) => this.formatAdminListing(item)),
@@ -208,5 +224,56 @@ export class AdminService {
     });
 
     return this.formatAdminListing(updated);
+  }
+
+  /**
+   * Update Event Commission & Payout Settings
+   * If checkInPin is updated or regenerated and saved, automatically emails the submitter
+   */
+  static async updateEventCommission(listingId: string, body: UpdateEventCommissionDto) {
+    const existing = await prisma.eventDetails.findUnique({
+      where: { listingId },
+      include: { listing: true },
+    });
+
+    if (!existing) {
+      throw new NotFoundError(`Event details for listing ID ${listingId} not found`);
+    }
+
+    const previousPin = existing.checkInPin?.trim();
+    const newPin =
+      body.checkInPin !== undefined && body.checkInPin !== null
+        ? String(body.checkInPin).trim()
+        : undefined;
+
+    // Pin is changed if a non-empty newPin was supplied and is different from previousPin
+    const isPinChanged = newPin !== undefined && newPin !== '' && newPin !== previousPin;
+
+    const updated = await prisma.eventDetails.update({
+      where: { listingId },
+      data: {
+        commissionType: body.commissionType,
+        commissionValue: body.commissionValue,
+        subaccountCode: body.subaccountCode || null,
+        ...(newPin !== undefined ? { checkInPin: newPin || null } : {}),
+      },
+    });
+
+    // If gate check-in PIN was regenerated/updated and saved, automatically notify the submitter via email
+    if (isPinChanged && newPin && existing.listing?.submitterEmail) {
+      try {
+        await EmailService.sendGatePinUpdatedEmail(
+          existing.listing.submitterEmail,
+          existing.listing.submitterName,
+          existing.listing.title,
+          existing.listing.id,
+          newPin
+        );
+      } catch (err) {
+        console.error('[AdminService.updateEventCommission] Failed to send PIN update email:', err);
+      }
+    }
+
+    return updated;
   }
 }

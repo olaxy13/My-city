@@ -4,6 +4,10 @@
 import type { TsoaRoute } from '@tsoa/runtime';
 import {  fetchMiddlewares, ExpressTemplateService } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { TicketPaymentController } from './../controllers/public/ticketPayment.controller';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { TicketsCheckInController } from './../controllers/public/ticketPayment.controller';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { SubmissionsController } from './../controllers/public/submissions.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { MediaController } from './../controllers/public/media.controller';
@@ -29,6 +33,95 @@ const expressAuthenticationRecasted = expressAuthentication as (req: ExRequest, 
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
 const models: TsoaRoute.Models = {
+    "AttendeeDto": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true},
+            "email": {"dataType":"string"},
+            "phone": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "InitializeTicketOrderDto": {
+        "dataType": "refObject",
+        "properties": {
+            "listingId": {"dataType":"string","required":true},
+            "tierId": {"dataType":"string","required":true},
+            "quantity": {"dataType":"double","required":true},
+            "customerName": {"dataType":"string","required":true},
+            "customerEmail": {"dataType":"string","required":true},
+            "customerPhone": {"dataType":"string","required":true},
+            "callbackUrl": {"dataType":"string"},
+            "attendees": {"dataType":"array","array":{"dataType":"refObject","ref":"AttendeeDto"}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "_36_Enums.CommissionType": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["PERCENTAGE"]},{"dataType":"enum","enums":["FLAT_FEE"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "_36_Enums.ListingStatus": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["pending"]},{"dataType":"enum","enums":["needs_changes"]},{"dataType":"enum","enums":["approved"]},{"dataType":"enum","enums":["rejected"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "_36_Enums.ListingType": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["event"]},{"dataType":"enum","enums":["restaurant"]},{"dataType":"enum","enums":["facility"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "_36_Enums.CategoryEnum": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["music"]},{"dataType":"enum","enums":["food_drink"]},{"dataType":"enum","enums":["sports"]},{"dataType":"enum","enums":["comedy"]},{"dataType":"enum","enums":["arts_culture"]},{"dataType":"enum","enums":["nightlife"]},{"dataType":"enum","enums":["religious"]},{"dataType":"enum","enums":["education"]},{"dataType":"enum","enums":["lifestyle"]},{"dataType":"enum","enums":["wellness"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "JsonValue": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"double"},{"dataType":"boolean"},{"ref":"JsonObject"},{"ref":"JsonArray"},{"dataType":"enum","enums":[null]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "JsonObject": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"additionalProperties":{"ref":"JsonValue"},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "JsonArray": {
+        "dataType": "refObject",
+        "properties": {
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "_36_Enums.OrderStatus": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["PENDING"]},{"dataType":"enum","enums":["PAID"]},{"dataType":"enum","enums":["FAILED"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "TicketEmailItem": {
+        "dataType": "refObject",
+        "properties": {
+            "ticketCode": {"dataType":"string","required":true},
+            "tierName": {"dataType":"string","required":true},
+            "attendeeName": {"dataType":"string","required":true},
+            "attendeeEmail": {"dataType":"string"},
+            "qrDataUrl": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CheckInRequestDto": {
+        "dataType": "refObject",
+        "properties": {
+            "tokenOrCode": {"dataType":"string","required":true},
+            "eventId": {"dataType":"string"},
+            "pin": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ListingType": {
         "dataType": "refAlias",
         "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["event"]},{"dataType":"enum","enums":["restaurant"]},{"dataType":"enum","enums":["facility"]}],"validators":{}},
@@ -86,6 +179,10 @@ const models: TsoaRoute.Models = {
             "startDateTime": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"datetime"}],"required":true},
             "endDateTime": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"datetime"},{"dataType":"enum","enums":[null]}]},
             "isRecurring": {"dataType":"boolean"},
+            "subaccountCode": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "commissionType": {"dataType":"string"},
+            "commissionValue": {"dataType":"double"},
+            "checkInPin": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
         },
         "additionalProperties": false,
     },
@@ -115,6 +212,17 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CreateTicketTierDto": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true},
+            "price": {"dataType":"double","required":true},
+            "totalCapacity": {"dataType":"double","required":true},
+            "description": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "CreateSubmissionDto": {
         "dataType": "refObject",
         "properties": {
@@ -139,6 +247,10 @@ const models: TsoaRoute.Models = {
             "eventDetails": {"ref":"EventDetailsDto"},
             "restaurantDetails": {"ref":"RestaurantDetailsDto"},
             "facilityDetails": {"ref":"FacilityDetailsDto"},
+            "ticketTiers": {"dataType":"array","array":{"dataType":"refObject","ref":"CreateTicketTierDto"}},
+            "payoutBankCode": {"dataType":"string"},
+            "payoutAccountNumber": {"dataType":"string"},
+            "payoutAccountName": {"dataType":"string"},
         },
         "additionalProperties": false,
     },
@@ -156,6 +268,20 @@ const models: TsoaRoute.Models = {
     "ListingStatus": {
         "dataType": "refAlias",
         "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["pending"]},{"dataType":"enum","enums":["needs_changes"]},{"dataType":"enum","enums":["approved"]},{"dataType":"enum","enums":["rejected"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "TicketTierResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "description": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "price": {"dataType":"double","required":true},
+            "totalCapacity": {"dataType":"double","required":true},
+            "soldCount": {"dataType":"double","required":true},
+            "isSoldOut": {"dataType":"boolean","required":true},
+        },
+        "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ListingDetailResponse": {
@@ -185,6 +311,7 @@ const models: TsoaRoute.Models = {
             "eventDetails": {"dataType":"union","subSchemas":[{"ref":"EventDetailsDto"},{"dataType":"enum","enums":[null]}]},
             "restaurantDetails": {"dataType":"union","subSchemas":[{"ref":"RestaurantDetailsDto"},{"dataType":"enum","enums":[null]}]},
             "facilityDetails": {"dataType":"union","subSchemas":[{"ref":"FacilityDetailsDto"},{"dataType":"enum","enums":[null]}]},
+            "ticketTiers": {"dataType":"array","array":{"dataType":"refObject","ref":"TicketTierResponse"}},
             "createdAt": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"datetime"}],"required":true},
             "updatedAt": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"datetime"}],"required":true},
         },
@@ -488,6 +615,7 @@ const models: TsoaRoute.Models = {
             "eventDetails": {"dataType":"union","subSchemas":[{"ref":"EventDetailsDto"},{"dataType":"enum","enums":[null]}]},
             "restaurantDetails": {"dataType":"union","subSchemas":[{"ref":"RestaurantDetailsDto"},{"dataType":"enum","enums":[null]}]},
             "facilityDetails": {"dataType":"union","subSchemas":[{"ref":"FacilityDetailsDto"},{"dataType":"enum","enums":[null]}]},
+            "ticketTiers": {"dataType":"array","array":{"dataType":"refObject","ref":"TicketTierResponse"}},
             "createdAt": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"datetime"}],"required":true},
             "updatedAt": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"datetime"}],"required":true},
         },
@@ -550,6 +678,27 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ApiResponse_any_": {
+        "dataType": "refObject",
+        "properties": {
+            "success": {"dataType":"boolean","required":true},
+            "message": {"dataType":"string","required":true},
+            "data": {"dataType":"any","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UpdateEventCommissionDto": {
+        "dataType": "refObject",
+        "properties": {
+            "commissionType": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["PERCENTAGE"]},{"dataType":"enum","enums":["FLAT_FEE"]}],"required":true},
+            "commissionValue": {"dataType":"double","required":true},
+            "subaccountCode": {"dataType":"string"},
+            "checkInPin": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
 const templateService = new ExpressTemplateService(models, {"noImplicitAdditionalProperties":"throw-on-extras","bodyCoercion":true});
 
@@ -567,6 +716,278 @@ export function RegisterRoutes(app: Router) {
 
 
     
+        const argsTicketPaymentController_initializeOrder: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"ref":"InitializeTicketOrderDto"},
+        };
+        app.post('/api/tickets/payment/initialize',
+            ...(fetchMiddlewares<RequestHandler>(TicketPaymentController)),
+            ...(fetchMiddlewares<RequestHandler>(TicketPaymentController.prototype.initializeOrder)),
+
+            async function TicketPaymentController_initializeOrder(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsTicketPaymentController_initializeOrder, request, response });
+
+                const controller = new TicketPaymentController();
+
+              await templateService.apiHandler({
+                methodName: 'initializeOrder',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsTicketPaymentController_verifyOrder: Record<string, TsoaRoute.ParameterSchema> = {
+                reference: {"in":"path","name":"reference","required":true,"dataType":"string"},
+        };
+        app.get('/api/tickets/payment/verify/:reference',
+            ...(fetchMiddlewares<RequestHandler>(TicketPaymentController)),
+            ...(fetchMiddlewares<RequestHandler>(TicketPaymentController.prototype.verifyOrder)),
+
+            async function TicketPaymentController_verifyOrder(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsTicketPaymentController_verifyOrder, request, response });
+
+                const controller = new TicketPaymentController();
+
+              await templateService.apiHandler({
+                methodName: 'verifyOrder',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsTicketPaymentController_handleWebhook: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"dataType":"any"},
+                signature: {"in":"header","name":"x-paystack-signature","dataType":"string"},
+                req: {"in":"request","name":"req","dataType":"object"},
+        };
+        app.post('/api/tickets/payment/webhook/paystack',
+            ...(fetchMiddlewares<RequestHandler>(TicketPaymentController)),
+            ...(fetchMiddlewares<RequestHandler>(TicketPaymentController.prototype.handleWebhook)),
+
+            async function TicketPaymentController_handleWebhook(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsTicketPaymentController_handleWebhook, request, response });
+
+                const controller = new TicketPaymentController();
+
+              await templateService.apiHandler({
+                methodName: 'handleWebhook',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsTicketPaymentController_checkInTicket: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"ref":"CheckInRequestDto"},
+        };
+        app.post('/api/tickets/payment/check-in',
+            ...(fetchMiddlewares<RequestHandler>(TicketPaymentController)),
+            ...(fetchMiddlewares<RequestHandler>(TicketPaymentController.prototype.checkInTicket)),
+
+            async function TicketPaymentController_checkInTicket(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsTicketPaymentController_checkInTicket, request, response });
+
+                const controller = new TicketPaymentController();
+
+              await templateService.apiHandler({
+                methodName: 'checkInTicket',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsTicketPaymentController_getBanks: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.get('/api/tickets/payment/payouts/banks',
+            ...(fetchMiddlewares<RequestHandler>(TicketPaymentController)),
+            ...(fetchMiddlewares<RequestHandler>(TicketPaymentController.prototype.getBanks)),
+
+            async function TicketPaymentController_getBanks(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsTicketPaymentController_getBanks, request, response });
+
+                const controller = new TicketPaymentController();
+
+              await templateService.apiHandler({
+                methodName: 'getBanks',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsTicketPaymentController_resolveAccount: Record<string, TsoaRoute.ParameterSchema> = {
+                accountNumber: {"in":"query","name":"accountNumber","required":true,"dataType":"string"},
+                bankCode: {"in":"query","name":"bankCode","required":true,"dataType":"string"},
+        };
+        app.get('/api/tickets/payment/payouts/resolve-account',
+            ...(fetchMiddlewares<RequestHandler>(TicketPaymentController)),
+            ...(fetchMiddlewares<RequestHandler>(TicketPaymentController.prototype.resolveAccount)),
+
+            async function TicketPaymentController_resolveAccount(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsTicketPaymentController_resolveAccount, request, response });
+
+                const controller = new TicketPaymentController();
+
+              await templateService.apiHandler({
+                methodName: 'resolveAccount',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsTicketPaymentController_createSubaccount: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"accountNumber":{"dataType":"string","required":true},"bankCode":{"dataType":"string","required":true},"businessName":{"dataType":"string","required":true}}},
+        };
+        app.post('/api/tickets/payment/payouts/subaccount',
+            ...(fetchMiddlewares<RequestHandler>(TicketPaymentController)),
+            ...(fetchMiddlewares<RequestHandler>(TicketPaymentController.prototype.createSubaccount)),
+
+            async function TicketPaymentController_createSubaccount(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsTicketPaymentController_createSubaccount, request, response });
+
+                const controller = new TicketPaymentController();
+
+              await templateService.apiHandler({
+                methodName: 'createSubaccount',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsTicketPaymentController_resendTicket: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"newEmail":{"dataType":"string"},"ticketCode":{"dataType":"string","required":true}}},
+        };
+        app.post('/api/tickets/payment/resend',
+            ...(fetchMiddlewares<RequestHandler>(TicketPaymentController)),
+            ...(fetchMiddlewares<RequestHandler>(TicketPaymentController.prototype.resendTicket)),
+
+            async function TicketPaymentController_resendTicket(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsTicketPaymentController_resendTicket, request, response });
+
+                const controller = new TicketPaymentController();
+
+              await templateService.apiHandler({
+                methodName: 'resendTicket',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsTicketsCheckInController_checkInTicket: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"ref":"CheckInRequestDto"},
+        };
+        app.post('/api/tickets/check-in',
+            ...(fetchMiddlewares<RequestHandler>(TicketsCheckInController)),
+            ...(fetchMiddlewares<RequestHandler>(TicketsCheckInController.prototype.checkInTicket)),
+
+            async function TicketsCheckInController_checkInTicket(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsTicketsCheckInController_checkInTicket, request, response });
+
+                const controller = new TicketsCheckInController();
+
+              await templateService.apiHandler({
+                methodName: 'checkInTicket',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsSubmissionsController_createSubmission: Record<string, TsoaRoute.ParameterSchema> = {
                 body: {"in":"body","name":"body","required":true,"ref":"CreateSubmissionDto"},
         };
@@ -1185,6 +1606,38 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'setPublishStatus',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminListingsController_updateEventCommission: Record<string, TsoaRoute.ParameterSchema> = {
+                id: {"in":"path","name":"id","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"UpdateEventCommissionDto"},
+        };
+        app.put('/api/v1/admin/listings/:id/commission',
+            authenticateMiddleware([{"jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminListingsController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminListingsController.prototype.updateEventCommission)),
+
+            async function AdminListingsController_updateEventCommission(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminListingsController_updateEventCommission, request, response });
+
+                const controller = new AdminListingsController();
+
+              await templateService.apiHandler({
+                methodName: 'updateEventCommission',
                 controller,
                 response,
                 next,

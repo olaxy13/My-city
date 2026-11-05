@@ -1,5 +1,5 @@
 import { Controller, Route, Get, Put, Query, Path, Body, Tags, Security, Response } from 'tsoa';
-import { AdminService } from '../../services/admin.service';
+import { AdminService, UpdateEventCommissionDto } from '../../services/admin.service';
 import {
   AdminListingDetailResponse,
   FeatureListingDto,
@@ -7,6 +7,7 @@ import {
   PublishStatusDto,
 } from '../../models/admin.dto';
 import { ListingStatus, ListingType, ApiResponse, PaginatedApiResponse, ApiErrorResponse } from '../../models/common.dto';
+import { prisma } from '../../config/prisma';
 
 @Tags('Admin Listings')
 @Security('jwt')
@@ -101,4 +102,19 @@ export class AdminListingsController extends Controller {
       data: updated,
     };
   }
+
+  @Response<ApiErrorResponse>(404, 'Event details not found')
+  @Put('{id}/commission')
+  public async updateEventCommission(
+    @Path() id: string,
+    @Body() body: UpdateEventCommissionDto
+  ): Promise<ApiResponse<any>> {
+    const updated = await AdminService.updateEventCommission(id, body);
+    return {
+      success: true,
+      message: 'Event commission and payout settings updated successfully',
+      data: updated,
+    };
+  }
+
 }

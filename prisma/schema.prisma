@@ -39,6 +39,18 @@ enum CategoryEnum {
   wellness
 }
 
+enum CommissionType {
+  PERCENTAGE   // Commission is a percentage (e.g. 1000 = 10.00%, 600 = 6.00%)
+  FLAT_FEE     // Commission is a fixed amount per ticket (e.g. 30000 = ₦300)
+}
+
+enum OrderStatus {
+  PENDING      // Order created, awaiting customer payment
+  PAID         // Payment confirmed by gateway webhook
+  FAILED       // Payment failed or was cancelled
+}
+
+
 model Listing {
   id              String        @id @default(uuid()) @db.Uuid
   listingType     ListingType
@@ -76,6 +88,10 @@ model Listing {
   restaurantDetails RestaurantDetails?
   facilityDetails   FacilityDetails?
 
+  ticketTiers       TicketTier[]
+  ticketOrders      TicketOrder[]
+
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -106,6 +122,17 @@ model EventDetails {
   startDateTime DateTime
   endDateTime   DateTime?
   isRecurring   Boolean  @default(false)
+
+  // Organizer Payout Bank Details (submitted by organizer at listing time)
+  payoutBankCode      String?         // e.g. "058" (GTBank), "033" (UBA)
+  payoutAccountNumber String?         // e.g. "0123456789"
+  payoutAccountName   String?         // e.g. "ADEBAYO OGUNLEYE"
+
+  // Platform Payout Configuration (set by admin)
+  subaccountCode    String?                        // Organizer's Paystack/Flutterwave subaccount (e.g. "ACCT_xxxxxx")
+  commissionType    CommissionType  @default(PERCENTAGE)
+  commissionValue   Int             @default(1000) // Default: 1000 basis points (10.00%), or in FLAT_FEE: 30000 = ₦300
+  checkInPin        String?         // 6-digit PIN for gate ushers, auto-generated on approval
 
   @@index([startDateTime])
   @@map("event_details")
@@ -149,4 +176,89 @@ model AdminUser {
   updatedAt    DateTime  @updatedAt
 
   @@map("admin_users")
+}
+
+model TicketTier {
+  id              String            @id @default(uuid()) @db.Uuid
+  listingId       String            @db.Uuid
+  listing         Listing           @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  name            String            // e.g. "Early Bird", "Regular", "VIP Table"
+  description     String?           // Perks included with this ticket
+  price     Int               // Exact price (e.g.  ₦5,000)
+  totalCapacity   Int               // Total number of tickets available for this tier
+  soldCount       Int               @default(0) // Incremented atomically on successful payment
+  // Relationships
+  orderItems      TicketOrderItem[] // Orders that purchased this tier
+  tickets         Ticket[]          // Individual physical/digital tickets issued
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  @@index([listingId])
+  @@map("ticket_tiers")
+}
+
+model TicketOrder {
+  id                    String            @id @default(uuid()) @db.Uuid
+  reference             String            @unique // Unique payment reference (e.g. "CBZ-ORD-1730129482-A8F2")
+  listingId             String            @db.Uuid
+  listing               Listing           @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  // Customer Contact Info
+  customerName          String
+  customerEmail         String
+  customerPhone         String
+  attendeeDetails       Json? 
+  // Financials 
+  totalAmount     Int               // Total bill paid by customer
+  commission      Int               // Citybuzz platform earnings
+  organizerAmount Int               // Net amount routed to organizer
+  // Status & Provider
+  status                OrderStatus       @default(PENDING)
+  paymentProvider       String            @default("paystack") // "paystack" | "flutterwave"
+  paidAt                DateTime?
+  // Relationships
+  items                 TicketOrderItem[] // Line items in this order
+  tickets               Ticket[]          // The actual tickets issued to the customer
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+  @@index([listingId])
+  @@index([customerEmail])
+  @@index([reference])
+  @@index([status])
+  @@map("ticket_orders")
+}
+
+model TicketOrderItem {
+  id              String      @id @default(uuid()) @db.Uuid
+  orderId         String      @db.Uuid
+  order           TicketOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  ticketTierId    String      @db.Uuid
+  tier            TicketTier  @relation(fields: [ticketTierId], references: [id])
+  quantity        Int         // Number of tickets for this tier in this order (e.g. 2)
+  unitPrice Int         // Price per ticket at time of checkout (in kobo)
+  subtotal  Int         // quantity * unitPriceInKobo
+  createdAt       DateTime    @default(now())
+  @@index([orderId])
+  @@index([ticketTierId])
+  @@map("ticket_order_items")
+}
+
+model Ticket {
+  id           String      @id @default(uuid()) @db.Uuid
+  orderId      String      @db.Uuid
+  order        TicketOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  ticketTierId String      @db.Uuid
+  tier         TicketTier  @relation(fields: [ticketTierId], references: [id])
+  ticketCode   String      @unique // Human readable code: e.g. "CBZ-TKT-98214"
+  qrToken      String      @unique // Cryptographic random string encoded inside the QR code
+  
+  attendeeName  String?     // Specific attendee name for this ticket pass
+  attendeeEmail String?
+  attendeePhone String?
+  // Gate check-in status
+  isUsed       Boolean     @default(false)
+  checkedInAt  DateTime?
+  createdAt    DateTime    @default(now())
+  @@index([orderId])
+  @@index([ticketTierId])
+  @@index([qrToken])
+  @@map("tickets")
 }
