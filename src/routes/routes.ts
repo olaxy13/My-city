@@ -18,6 +18,10 @@ import { CitiesController } from './../controllers/public/cities.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { CategoriesController } from './../controllers/public/categories.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { OrganizerEventsController } from './../controllers/organizer/organizer-events.controller';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { OrganizerAuthController } from './../controllers/organizer/organizer-auth.controller';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminModerationController } from './../controllers/admin/moderation.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminAuthController } from './../controllers/admin/auth.controller';
@@ -487,6 +491,92 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ApiResponse_any-Array_": {
+        "dataType": "refObject",
+        "properties": {
+            "success": {"dataType":"boolean","required":true},
+            "message": {"dataType":"string","required":true},
+            "data": {"dataType":"array","array":{"dataType":"any"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ApiResponse_any_": {
+        "dataType": "refObject",
+        "properties": {
+            "success": {"dataType":"boolean","required":true},
+            "message": {"dataType":"string","required":true},
+            "data": {"dataType":"any","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UpdateListingDto": {
+        "dataType": "refObject",
+        "properties": {
+            "title": {"dataType":"string"},
+            "description": {"dataType":"string"},
+            "thumbnailUrl": {"dataType":"string"},
+            "galleryImageUrls": {"dataType":"array","array":{"dataType":"string"}},
+            "contactPhone": {"dataType":"string"},
+            "contactEmail": {"dataType":"string"},
+            "externalLink": {"dataType":"string"},
+            "address": {"dataType":"string"},
+            "city": {"dataType":"string"},
+            "neighborhood": {"dataType":"string"},
+            "latitude": {"dataType":"double"},
+            "longitude": {"dataType":"double"},
+            "startDateTime": {"dataType":"string"},
+            "endDateTime": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UpdateSettingsDto": {
+        "dataType": "refObject",
+        "properties": {
+            "notificationPreference": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["per_sale"]},{"dataType":"enum","enums":["daily_digest"]},{"dataType":"enum","enums":["weekly_digest"]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ApiResponse__message-string__": {
+        "dataType": "refObject",
+        "properties": {
+            "success": {"dataType":"boolean","required":true},
+            "message": {"dataType":"string","required":true},
+            "data": {"dataType":"nestedObjectLiteral","nestedProperties":{"message":{"dataType":"string","required":true}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "RequestLinkDto": {
+        "dataType": "refObject",
+        "properties": {
+            "email": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OrganizerLoginResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "token": {"dataType":"string","required":true},
+            "organizerEmail": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ApiResponse_OrganizerLoginResponse_": {
+        "dataType": "refObject",
+        "properties": {
+            "success": {"dataType":"boolean","required":true},
+            "message": {"dataType":"string","required":true},
+            "data": {"ref":"OrganizerLoginResponse","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ModerationActionResponse": {
         "dataType": "refObject",
         "properties": {
@@ -674,16 +764,6 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "isPublished": {"dataType":"boolean","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ApiResponse_any_": {
-        "dataType": "refObject",
-        "properties": {
-            "success": {"dataType":"boolean","required":true},
-            "message": {"dataType":"string","required":true},
-            "data": {"dataType":"any","required":true},
         },
         "additionalProperties": false,
     },
@@ -1288,6 +1368,291 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getCategories',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsOrganizerEventsController_getEvents: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+        };
+        app.get('/api/v1/organizer/events',
+            authenticateMiddleware([{"organizer_jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(OrganizerEventsController)),
+            ...(fetchMiddlewares<RequestHandler>(OrganizerEventsController.prototype.getEvents)),
+
+            async function OrganizerEventsController_getEvents(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsOrganizerEventsController_getEvents, request, response });
+
+                const controller = new OrganizerEventsController();
+
+              await templateService.apiHandler({
+                methodName: 'getEvents',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsOrganizerEventsController_getEventAnalytics: Record<string, TsoaRoute.ParameterSchema> = {
+                listingId: {"in":"path","name":"listingId","required":true,"dataType":"string"},
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+        };
+        app.get('/api/v1/organizer/events/:listingId',
+            authenticateMiddleware([{"organizer_jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(OrganizerEventsController)),
+            ...(fetchMiddlewares<RequestHandler>(OrganizerEventsController.prototype.getEventAnalytics)),
+
+            async function OrganizerEventsController_getEventAnalytics(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsOrganizerEventsController_getEventAnalytics, request, response });
+
+                const controller = new OrganizerEventsController();
+
+              await templateService.apiHandler({
+                methodName: 'getEventAnalytics',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsOrganizerEventsController_updateListing: Record<string, TsoaRoute.ParameterSchema> = {
+                listingId: {"in":"path","name":"listingId","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"UpdateListingDto"},
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+        };
+        app.patch('/api/v1/organizer/events/:listingId',
+            authenticateMiddleware([{"organizer_jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(OrganizerEventsController)),
+            ...(fetchMiddlewares<RequestHandler>(OrganizerEventsController.prototype.updateListing)),
+
+            async function OrganizerEventsController_updateListing(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsOrganizerEventsController_updateListing, request, response });
+
+                const controller = new OrganizerEventsController();
+
+              await templateService.apiHandler({
+                methodName: 'updateListing',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsOrganizerEventsController_getOrders: Record<string, TsoaRoute.ParameterSchema> = {
+                listingId: {"in":"path","name":"listingId","required":true,"dataType":"string"},
+                page: {"default":1,"in":"query","name":"page","dataType":"double"},
+                limit: {"default":20,"in":"query","name":"limit","dataType":"double"},
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+        };
+        app.get('/api/v1/organizer/events/:listingId/orders',
+            authenticateMiddleware([{"organizer_jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(OrganizerEventsController)),
+            ...(fetchMiddlewares<RequestHandler>(OrganizerEventsController.prototype.getOrders)),
+
+            async function OrganizerEventsController_getOrders(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsOrganizerEventsController_getOrders, request, response });
+
+                const controller = new OrganizerEventsController();
+
+              await templateService.apiHandler({
+                methodName: 'getOrders',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsOrganizerEventsController_getAttendees: Record<string, TsoaRoute.ParameterSchema> = {
+                listingId: {"in":"path","name":"listingId","required":true,"dataType":"string"},
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+        };
+        app.get('/api/v1/organizer/events/:listingId/attendees',
+            authenticateMiddleware([{"organizer_jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(OrganizerEventsController)),
+            ...(fetchMiddlewares<RequestHandler>(OrganizerEventsController.prototype.getAttendees)),
+
+            async function OrganizerEventsController_getAttendees(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsOrganizerEventsController_getAttendees, request, response });
+
+                const controller = new OrganizerEventsController();
+
+              await templateService.apiHandler({
+                methodName: 'getAttendees',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsOrganizerEventsController_getSettings: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+        };
+        app.get('/api/v1/organizer/settings',
+            authenticateMiddleware([{"organizer_jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(OrganizerEventsController)),
+            ...(fetchMiddlewares<RequestHandler>(OrganizerEventsController.prototype.getSettings)),
+
+            async function OrganizerEventsController_getSettings(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsOrganizerEventsController_getSettings, request, response });
+
+                const controller = new OrganizerEventsController();
+
+              await templateService.apiHandler({
+                methodName: 'getSettings',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsOrganizerEventsController_updateSettings: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"ref":"UpdateSettingsDto"},
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
+        };
+        app.patch('/api/v1/organizer/settings',
+            authenticateMiddleware([{"organizer_jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(OrganizerEventsController)),
+            ...(fetchMiddlewares<RequestHandler>(OrganizerEventsController.prototype.updateSettings)),
+
+            async function OrganizerEventsController_updateSettings(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsOrganizerEventsController_updateSettings, request, response });
+
+                const controller = new OrganizerEventsController();
+
+              await templateService.apiHandler({
+                methodName: 'updateSettings',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsOrganizerAuthController_requestLink: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"ref":"RequestLinkDto"},
+        };
+        app.post('/api/v1/organizer/auth/request-link',
+            ...(fetchMiddlewares<RequestHandler>(OrganizerAuthController)),
+            ...(fetchMiddlewares<RequestHandler>(OrganizerAuthController.prototype.requestLink)),
+
+            async function OrganizerAuthController_requestLink(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsOrganizerAuthController_requestLink, request, response });
+
+                const controller = new OrganizerAuthController();
+
+              await templateService.apiHandler({
+                methodName: 'requestLink',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsOrganizerAuthController_verify: Record<string, TsoaRoute.ParameterSchema> = {
+                token: {"in":"query","name":"token","required":true,"dataType":"string"},
+        };
+        app.get('/api/v1/organizer/auth/verify',
+            ...(fetchMiddlewares<RequestHandler>(OrganizerAuthController)),
+            ...(fetchMiddlewares<RequestHandler>(OrganizerAuthController.prototype.verify)),
+
+            async function OrganizerAuthController_verify(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsOrganizerAuthController_verify, request, response });
+
+                const controller = new OrganizerAuthController();
+
+              await templateService.apiHandler({
+                methodName: 'verify',
                 controller,
                 response,
                 next,

@@ -262,3 +262,25 @@ model Ticket {
   @@index([qrToken])
   @@map("tickets")
 }
+
+model OrganizerMagicToken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@map("organizer_magic_tokens")
+}
+
+model OrganizerSettings {
+  id                     String   @id @default(cuid())
+  email                  String   @unique
+  notificationPreference String   @default("per_sale")
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  @@map("organizer_settings")
+}

@@ -7,6 +7,7 @@ import path from 'path';
 import { env } from './config/env';
 import { RegisterRoutes } from './routes/routes';
 import { errorHandler } from './middlewares/error.middleware';
+import { addOrganizerCsvRoute } from './routes/organizer-csv.route';
 
 const app: Express = express();
 
@@ -59,6 +60,9 @@ app.get('/', (_req: Request, res: Response) => {
     health: '/health',
   });
 });
+
+// Register organizer CSV export route (plain Express, not tsoa)
+addOrganizerCsvRoute(app);
 
 // Register tsoa auto-generated routes
 try {

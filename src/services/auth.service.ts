@@ -26,6 +26,16 @@ export class AuthService {
     return jwt.verify(token, env.JWT_SECRET) as JwtPayload;
   }
 
+  static generateOrganizerToken(email: string): string {
+    const payload: JwtPayload = {
+      userId: email,  // use email as userId for organizers
+      email,
+      role: 'organizer',
+      organizerEmail: email,
+    };
+    return jwt.sign(payload, env.JWT_SECRET, { expiresIn: '24h' } as jwt.SignOptions);
+  }
+
   static async login(dto: LoginDto): Promise<LoginResponse> {
     const admin = await prisma.adminUser.findUnique({
       where: { email: dto.email.toLowerCase().trim() },

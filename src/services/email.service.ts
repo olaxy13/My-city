@@ -383,4 +383,128 @@ export class EmailService {
     `;
     return this.sendEmail({ to: toEmail, subject, html });
   }
+
+  /**
+   * Sends a magic login link to an organizer so they can access their dashboard.
+   */
+  static async sendOrganizerMagicLinkEmail(email: string, token: string) {
+    const dashboardLink = `${env.FRONTEND_URL}/organizer/verify?token=${token}`;
+    const subject = `Your Citybuzz Organizer Dashboard Login Link`;
+
+    const html = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 0; background-color: #0f172a; border-radius: 10px; overflow: hidden;">
+        <!-- Branded header -->
+        <div style="background-color: #0f172a; padding: 32px 24px 20px; text-align: center;">
+          <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: bold; letter-spacing: 1px;">Citybuzz</h1>
+          <p style="color: #94a3b8; margin: 6px 0 0; font-size: 13px;">Organizer Dashboard</p>
+        </div>
+
+        <!-- Body -->
+        <div style="background-color: #ffffff; padding: 32px 24px;">
+          <h2 style="color: #0f172a; margin-top: 0; font-size: 20px;">Your Login Link is Ready</h2>
+          <p style="color: #1e293b;">Hi there,</p>
+          <p style="color: #1e293b;">We received a request to access the Citybuzz Organizer Dashboard for <strong>${email}</strong>. Click the button below to sign in.</p>
+
+          <div style="margin: 32px 0; text-align: center;">
+            <a href="${dashboardLink}" style="background-color: #0f172a; color: #ffffff; padding: 14px 32px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 15px; display: inline-block;">
+              Access My Dashboard
+            </a>
+          </div>
+
+          <div style="background-color: #f1f5f9; border-radius: 6px; padding: 14px 18px; margin: 24px 0;">
+            <p style="margin: 0; font-size: 13px; color: #475569;">&#8987; <strong>This link expires in 30 minutes and can only be used once.</strong></p>
+          </div>
+
+          <p style="font-size: 13px; color: #64748b;">If you didn't request this link, you can safely ignore this email. Someone may have entered your email address by mistake.</p>
+          <p style="font-size: 12px; color: #94a3b8;">Or paste this URL into your browser:<br/><code style="word-break: break-all;">${dashboardLink}</code></p>
+        </div>
+
+        <!-- Footer -->
+        <div style="background-color: #0f172a; padding: 16px 24px; text-align: center;">
+          <p style="font-size: 12px; color: #64748b; margin: 0;">Citybuzz &bull; Abeokuta City Discovery &amp; Events</p>
+        </div>
+      </div>
+    `;
+
+    return this.sendEmail({ to: email, subject, html });
+  }
+
+  /**
+   * Sends an instant notification email to the event organizer when a ticket is purchased.
+   */
+  static async sendOrganizerSaleNotificationEmail(params: {
+    organizerEmail: string;
+    organizerName: string;
+    eventTitle: string;
+    customerName: string;
+    ticketsCount: number;
+    totalAmount: number;
+    commission: number;
+    organizerAmount: number;
+    reference: string;
+  }) {
+    const {
+      organizerEmail,
+      organizerName,
+      eventTitle,
+      customerName,
+      ticketsCount,
+      totalAmount,
+      commission,
+      organizerAmount,
+      reference,
+    } = params;
+
+    const subject = `🎉 New Ticket Sale! ${ticketsCount} ticket${ticketsCount > 1 ? 's' : ''} sold for "${eventTitle}"`;
+
+    const html = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 0; background-color: #0f172a; border-radius: 10px; overflow: hidden;">
+        <div style="background-color: #0f172a; padding: 32px 24px 20px; text-align: center;">
+          <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: bold; letter-spacing: 1px;">Citybuzz</h1>
+          <p style="color: #22c55e; margin: 6px 0 0; font-size: 14px; font-weight: bold;">New Ticket Sale Confirmed</p>
+        </div>
+
+        <div style="background-color: #ffffff; padding: 32px 24px;">
+          <h2 style="color: #0f172a; margin-top: 0; font-size: 20px;">Great news, ${organizerName || 'Organizer'}!</h2>
+          <p style="color: #1e293b; font-size: 15px;"><strong>${customerName}</strong> just purchased <strong>${ticketsCount} ticket${ticketsCount > 1 ? 's' : ''}</strong> for <strong>${eventTitle}</strong>.</p>
+
+          <!-- Financial Breakdown Box -->
+          <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px 20px; margin: 24px 0;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+              <tr>
+                <td style="color: #64748b; padding: 6px 0;">Gross Sale:</td>
+                <td style="text-align: right; font-weight: bold; color: #0f172a;">₦${totalAmount.toLocaleString()}</td>
+              </tr>
+              <tr>
+                <td style="color: #64748b; padding: 6px 0;">Platform Fee:</td>
+                <td style="text-align: right; color: #ef4444;">- ₦${commission.toLocaleString()}</td>
+              </tr>
+              <tr style="border-top: 1px solid #cbd5e1;">
+                <td style="color: #0f172a; font-weight: bold; padding: 10px 0 4px;">Your Net Payout:</td>
+                <td style="text-align: right; font-weight: bold; font-size: 16px; color: #16a34a; padding: 10px 0 4px;">₦${organizerAmount.toLocaleString()}</td>
+              </tr>
+            </table>
+          </div>
+
+          <p style="font-size: 13px; color: #64748b; margin-bottom: 24px;">Order Reference: <code>${reference}</code></p>
+
+          <div style="text-align: center; margin: 28px 0;">
+            <a href="${env.FRONTEND_URL}/organizer/dashboard" style="background-color: #ff5a36; color: #ffffff; padding: 12px 28px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 14px; display: inline-block;">
+              View in Organizer Dashboard
+            </a>
+          </div>
+
+          <p style="font-size: 12px; color: #94a3b8; text-align: center; margin-top: 24px;">
+            You can change your notification frequency (per sale, daily digest, or weekly) in your <a href="${env.FRONTEND_URL}/organizer/settings" style="color: #ff5a36;">dashboard settings</a>.
+          </p>
+        </div>
+
+        <div style="background-color: #0f172a; padding: 16px 24px; text-align: center;">
+          <p style="font-size: 12px; color: #64748b; margin: 0;">Citybuzz &bull; Abeokuta City Discovery &amp; Events</p>
+        </div>
+      </div>
+    `;
+
+    return this.sendEmail({ to: organizerEmail, subject, html });
+  }
 }

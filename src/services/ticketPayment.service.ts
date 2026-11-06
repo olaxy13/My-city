@@ -297,6 +297,28 @@ export class TicketPaymentService {
             tickets: generatedTickets,
         }).catch((err) => console.error(`[Buyer Receipt Email Error - ${order.customerEmail}]:`, err));
 
+        // C. Send Sale Notification to Organizer (if preference is per_sale, which is default)
+        if (order.listing.submitterEmail) {
+            prisma.organizerSettings.findUnique({
+                where: { email: order.listing.submitterEmail },
+            }).then((settings) => {
+                const preference = settings?.notificationPreference || 'per_sale';
+                if (preference === 'per_sale') {
+                    return EmailService.sendOrganizerSaleNotificationEmail({
+                        organizerEmail: order.listing.submitterEmail,
+                        organizerName: order.listing.submitterName,
+                        eventTitle: order.listing.title,
+                        customerName: order.customerName,
+                        ticketsCount: generatedTickets.length,
+                        totalAmount: order.totalAmount,
+                        commission: order.commission,
+                        organizerAmount: order.organizerAmount,
+                        reference: order.reference,
+                    });
+                }
+            }).catch((err) => console.error(`[Organizer Sale Notification Email Error - ${order.listing.submitterEmail}]:`, err));
+        }
+
         return { isSuccess: true, message: "Tickets generated and emailed successfully", order, tickets: generatedTickets };
     }
 

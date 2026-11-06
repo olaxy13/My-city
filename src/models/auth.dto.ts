@@ -16,11 +16,11 @@ export interface AdminUserResponse {
 
 export interface LoginResponse {
   token: string;
-  //admin: AdminUserResponse;
 }
 
 export interface JwtPayload {
   userId: string;
   email: string;
-  role: AdminRole;
+  role: AdminRole | 'organizer';
+  organizerEmail?: string; // set when role === 'organizer'
 }

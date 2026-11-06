@@ -33,5 +33,26 @@ export async function expressAuthentication(
     }
   }
 
+  if (securityName === 'organizer_jwt') {
+    const authHeader = request.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      throw new UnauthorizedError('No authentication token provided');
+    }
+
+    const token = authHeader.split(' ')[1];
+    try {
+      const decoded = AuthService.verifyToken(token);
+      if (decoded.role !== 'organizer') {
+        throw new ForbiddenError('This endpoint is for organizers only');
+      }
+      return decoded;
+    } catch (err) {
+      if (err instanceof ForbiddenError) {
+        throw err;
+      }
+      throw new UnauthorizedError('Invalid or expired organizer token');
+    }
+  }
+
   throw new UnauthorizedError(`Unknown security scheme '${securityName}'`);
 }
